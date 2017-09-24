@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM ubuntu:16.04
+FROM golang:1.8
 
-RUN apt-get update -y && apt-get install -y ca-certificates
+WORKDIR /go/src/app
 
-ADD digitalocean-cloud-controller-manager /bin/
+COPY . .
 
-CMD ["/bin/digitalocean-cloud-controller-manager"]
+RUN go-wrapper download
+
+RUN go-wrapper install 
+
+CMD ["go-wrapper", "run"] 
