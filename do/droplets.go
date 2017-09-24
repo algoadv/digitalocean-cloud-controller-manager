@@ -28,6 +28,8 @@ import (
 
 	"github.com/digitalocean/godo"
 	"github.com/digitalocean/godo/context"
+
+	"github.com/golang/glog"
 )
 
 // instances Implements cloudprovider.Instances
@@ -93,6 +95,7 @@ func (i *instances) ExternalID(nodeName types.NodeName) (string, error) {
 func (i *instances) InstanceID(nodeName types.NodeName) (string, error) {
 	droplet, err := i.dropletByName(context.TODO(), nodeName)
 	if err != nil {
+		glog.Infof("InstanceID %v : %v", nodeName, droplet.ID)
 		return "", err
 	}
 	return strconv.Itoa(droplet.ID), nil
@@ -133,6 +136,9 @@ func (i *instances) CurrentNodeName(hostname string) (types.NodeName, error) {
 
 // dropletById returns the godo Droplet type corresponding to the provided id
 func (i *instances) dropletById(ctx context.Context, id string) (*godo.Droplet, error) {
+
+	glog.Infof("dropletById %v", id)
+
 	intId, err := strconv.Atoi(id)
 	if err != nil {
 		return nil, fmt.Errorf("error converting droplet id to string: %v %s", err, id)
