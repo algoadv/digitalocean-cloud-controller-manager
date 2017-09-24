@@ -161,6 +161,8 @@ func (i *instances) dropletById(ctx context.Context, id string) (*godo.Droplet, 
 // the first one that matches the provided name
 func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) (*godo.Droplet, error) {
 	// TODO (andrewsykim): list by tag once a tagging format is determined
+	glog.Infof("dropletByName %v", nodeName)
+
 	droplets, resp, err := i.client.Droplets.List(ctx, &godo.ListOptions{})
 	if err != nil {
 		return nil, err
@@ -175,6 +177,8 @@ func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) 
 			return &droplet, nil
 		}
 	}
+
+	glog.Infof("dropletByName %v NOT FOUND", nodeName)
 
 	return nil, cloudprovider.InstanceNotFound
 }
