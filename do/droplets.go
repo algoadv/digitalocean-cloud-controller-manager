@@ -161,7 +161,7 @@ func (i *instances) dropletById(ctx context.Context, id string) (*godo.Droplet, 
 // the first one that matches the provided name
 func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) (*godo.Droplet, error) {
 	// TODO (andrewsykim): list by tag once a tagging format is determined
-	glog.Infof("dropletByName %v", nodeName)
+	glog.Infof("dropletByName %v for region %v", nodeName, i.region)
 
 	droplets, resp, err := i.client.Droplets.List(ctx, &godo.ListOptions{})
 	if err != nil {
@@ -173,6 +173,7 @@ func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) 
 	}
 
 	for _, droplet := range droplets {
+		glog.Infof("dropletByName Checking %v == %v", droplet.Name, string(nodeName))
 		if droplet.Name == string(nodeName) {
 			return &droplet, nil
 		}
