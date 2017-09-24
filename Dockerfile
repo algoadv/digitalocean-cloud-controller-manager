@@ -14,7 +14,7 @@
 
 FROM golang:1.8
 
-WORKDIR /go/src/app
+WORKDIR /go/src/github.com/algoadv/digitalocean-cloud-controller-manager
 
 COPY . .
 
