@@ -135,7 +135,7 @@ func (i *instances) CurrentNodeName(hostname string) (types.NodeName, error) {
 func (i *instances) dropletById(ctx context.Context, id string) (*godo.Droplet, error) {
 	intId, err := strconv.Atoi(id)
 	if err != nil {
-		return nil, fmt.Errorf("error converting droplet id to string: %v", err)
+		return nil, fmt.Errorf("error converting droplet id to string: %v %s", err, id)
 	}
 
 	droplet, resp, err := i.client.Droplets.Get(ctx, intId)

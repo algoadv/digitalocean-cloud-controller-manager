@@ -20,4 +20,6 @@ COPY . .
 
 RUN go-wrapper install 
 
+RUN cp /go/bin/digitalocean-cloud-controller-manager /bin/digitalocean-cloud-controller-manager
+
 CMD ["/go/bin/digitalocean-cloud-controller-manager"] 
