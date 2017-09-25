@@ -266,8 +266,6 @@ func (l *loadbalancers) nodesToDropletIDs(nodes []*v1.Node) ([]int, error) {
 
 	droplets, err := l.dropletList(context.TODO())
 
-	//droplets, _, err := l.client.Droplets.List(context.TODO(), &godo.ListOptions{})
-
 	if err != nil {
 		return nil, err
 	}
