@@ -163,7 +163,7 @@ func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) 
 	// TODO (andrewsykim): list by tag once a tagging format is determined
 	glog.Infof("dropletByName %v for region %v", nodeName, i.region)
 
-	droplets, resp, err := i.client.Droplets.List(ctx, &godo.ListOptions{})
+	droplets, resp, err := i.client.Droplets.List(ctx, &godo.ListOptions{PerPage: 100})
 	if err != nil {
 		return nil, err
 	}
