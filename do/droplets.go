@@ -156,6 +156,40 @@ func (i *instances) dropletById(ctx context.Context, id string) (*godo.Droplet, 
 	return droplet, nil
 }
 
+func (i *instances) dropletList(ctx context.Context) ([]godo.Droplet, error) {
+	// create a list to hold our droplets
+	list := []godo.Droplet{}
+
+	// create options. initially, these will be blank
+	opt := &godo.ListOptions{PerPage: 100}
+	for {
+		droplets, resp, err := i.client.Droplets.List(ctx, opt)
+		if err != nil {
+			return nil, err
+		}
+
+		// append the current page's droplets to our list
+		for _, d := range droplets {
+			list = append(list, d)
+		}
+
+		// if we are at the last page, break out the for loop
+		if resp.Links == nil || resp.Links.IsLastPage() {
+			break
+		}
+
+		page, err := resp.Links.CurrentPage()
+		if err != nil {
+			return nil, err
+		}
+
+		// set the page we want for the next request
+		opt.Page = page + 1
+	}
+
+	return list, nil
+}
+
 // dropletByName returns the godo Droplet type corresponding to the node name
 // since we can only get droplets by id, we do a list of all droplets and return
 // the first one that matches the provided name
@@ -163,13 +197,9 @@ func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) 
 	// TODO (andrewsykim): list by tag once a tagging format is determined
 	glog.Infof("dropletByName %v for region %v", nodeName, i.region)
 
-	droplets, resp, err := i.client.Droplets.List(ctx, &godo.ListOptions{PerPage: 100})
+	droplets, err := i.dropletList(ctx)
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("DO API returned non-200 status code: %d", resp.StatusCode)
 	}
 
 	for _, droplet := range droplets {
