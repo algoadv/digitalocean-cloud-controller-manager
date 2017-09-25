@@ -203,8 +203,8 @@ func (i *instances) dropletByName(ctx context.Context, nodeName types.NodeName) 
 	}
 
 	for _, droplet := range droplets {
-		glog.Infof("dropletByName Checking %v == %v", droplet.Name, string(nodeName))
 		if droplet.Name == string(nodeName) {
+			glog.Infof("dropletByName %v FOUND", nodeName)
 			return &droplet, nil
 		}
 	}
